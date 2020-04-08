@@ -1,12 +1,13 @@
 server:
   port: 1025
 
-#默认凌晨0点上午11点 中午12点 和晚上11点跑一次
+#一天跑三次
 cron:
-  * * 0,11,12,23 * * ?
+  0 0 0/8 * * *
 
 #邮件接收人
 mailTo:
+
 
 spring:
   #邮箱发件人配置
@@ -15,12 +16,5 @@ spring:
     username:
     password:
     default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
 #直接写入cookie
 jdCookie:

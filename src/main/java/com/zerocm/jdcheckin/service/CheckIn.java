@@ -1164,7 +1164,7 @@ public class CheckIn {
             }else {
                 if (jdResponsePojo.getData().getStatus() == 1){
                     logger.info("京东商城-京豆签到成功response: \n" + jdResponsePojo.getData());
-                    if (content.matches("dailyAward")){
+                    if (content.contains("dailyAward")){
                         returnParamPojo.setBean(jdResponsePojo.getData().getDailyAward().getBeanAward().getBeanCount());
                         returnParamPojo.setSuccess(1);
                         returnParamPojo.setNotify("京东商城-京豆: 成功, 明细: " + jdResponsePojo.getData().getDailyAward().getBeanAward().getBeanCount() + "京豆 ");
