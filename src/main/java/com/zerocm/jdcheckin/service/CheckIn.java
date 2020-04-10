@@ -40,7 +40,7 @@ public class CheckIn {
     private static String JRSUrl = "https://ms.jr.jd.com/gw/generic/gry/h5/m/signIn";//金融钢镚
     private static String JDTUrl = "https://api.m.jd.com/client.action?functionId=lotteryDraw&body=%7B%22actId%22%3A%22jgpqtzjhvaoym%22%2C%22appSource%22%3A%22jdhome%22%2C%22lotteryCode%22%3A%224wwzdq7wkqx2usx4g5i2nu5ho4auto4qxylblkxacm7jqdsltsepmgpn3b2hgyd7hiawzpccizuck%22%7D&appid=ld";//京东转盘
     private static String JRDSUrl = "https://nu.jr.jd.com/gw/generic/jrm/h5/m/process?";//京东双签
-    private static String JDGSUrl = "https://api.m.jd.com/client.action?functionId=userSign";//京东超市 &京东钟表馆 &京东宠物 &京东图书 &京豆二手拍 &京豆美妆馆 &京豆女装馆 &京东鞋靴馆 &京东食物 &京东生活
+    private static String JDGSUrl = "https://api.m.jd.com/client.action?functionId=userSign";//京东超市 &京东钟表馆 &京东宠物 &京东图书 &京豆二手拍 &京豆美妆馆 &京豆女装馆 &京东鞋靴馆 &京东食物 &京东生活 &京东京鱼
     private static String JDPETUrl = "https://api.m.jd.com/client.action?functionId=partitionJdSgin";//京东闪购
     private static String JDCAUrl = "https://api.m.jd.com/client.action?functionId=ccSignInNew";//京东现金
     private static String JRAdsUrl = "https://ms.jr.jd.com/gw/generic/jrm/h5/m/sendAdGb";//京东金融-广告
@@ -49,6 +49,66 @@ public class CheckIn {
     private static String JDkey = "https://api.m.jd.com/client.action?functionId=vvipscdp_raffleAct_index&client=apple&clientVersion=8.1.0&appid=member_benefit_m";//京东抽大奖
     private static String JDPUrl = "https://api.m.jd.com/client.action?functionId=vvipscdp_raffleAct_lotteryDraw&body=%7B%22raffleActKey%22%3A%22";//京东抽大奖签到
     private static String JDSh = "https://api.m.jd.com/client.action?appid=vip_h5&functionId=vvipclub_shaking";//京东摇一摇
+
+    /**
+     * 京东商城-京鱼
+     */
+    public ReturnParamPojo JingDongFish(){
+        ReturnParamPojo returnParamPojo = new ReturnParamPojo();
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("body", "{\"riskParam\":{\"eid\":\"O5X6JYMZTXIEX4VBCBWEM5PTIZV6HXH7M3AI75EABM5GBZYVQKRGQJ5A2PPO5PSELSRMI72SYF4KTCB4NIU6AZQ3O6C3J7ZVEP3RVDFEBKVN2RER2GTQ\",\"shshshfpb\":\"v1\\/zMYRjEWKgYe+UiNwEvaVlrHBQGVwqLx4CsS9PH1s0s0Vs9AWk+7vr9KSHh3BQd5NTukznDTZnd75xHzonHnw==\",\"pageClickKey\":\"Babel_Sign\",\"childActivityUrl\":\"https:\\/\\/pro.m.jd.com\\/mall\\/active\\/3BwL7BKvYV3i9imDeVtBbyU1v893\\/index.html?lng=0.000000&lat=0.000000&sid=ae5cf92b2f53e23f9339e4dae4789caw&un_area=19_1617_3643_8208\"},\"url\":\"https:\\/\\/pro.m.jd.com\\/mall\\/active\\/3BwL7BKvYV3i9imDeVtBbyU1v893\\/index.html?lng=0.000000&lat=0.000000&sid=ae5cf92b2f53e23f9339e4dae4789caw&un_area=19_1617_3643_8208\",\"params\":\"{\\\"enActK\\\":\\\"kHUojtemGSfyWMS74j\\/yrQjdkHCZ7LS0OV5zi7BgjzgaZs\\/n4coLNw==\\\",\\\"isFloatLayer\\\":false,\\\"ruleSrv\\\":\\\"00620312_30612459_t1\\\",\\\"signId\\\":\\\"RWgRKe30+okaZs\\/n4coLNw==\\\"}\",\"geo\":{\"lng\":\"0.000000\",\"lat\":\"0.000000\"}}");
+            param.put("client", "apple");
+            param.put("clientVersion","8.5.6");
+            param.put("d_brand","apple");
+            param.put("openudid","1fce88cd05c42fe2b054e846f11bdf33f016d676");
+            param.put("rfs","0000");
+            param.put("scope","11");
+            param.put("sign","9be1cb3dbe9d2986bed77e36f20d043a");
+            param.put("st","1586362297346");
+            param.put("sv","120");
+            String content = HttpClientTool.doPost(JDGSUrl, Cookie, param, null);
+            JDResponsePojo jdResponsePojo = JSON.parseObject(content, JDResponsePojo.class);
+            logger.info(content);
+            if (content.contains("签到成功")){
+                logger.info("京东商城-京鱼签到成功response: \n" + content);
+                if (matchForJDBean(content)!=null&&matchInteger(matchForJDBean(content))>0){
+                    Integer beanQuantity = matchInteger(matchForJDBean(content));
+                    returnParamPojo.setSuccess(1);
+                    returnParamPojo.setBean(beanQuantity);
+                    returnParamPojo.setNotify( "京东商城-京鱼: 成功, 明细: " + beanQuantity + "京豆 🐶");
+                }else {
+                    returnParamPojo.setSuccess(1);
+                    returnParamPojo.setNotify( "京东商城-京鱼: 成功, 明细: 无京豆");
+                }
+            } else {
+                logger.info("京东商城-京鱼签到失败response: \n" + content);
+                if (content.contains("已签到") || content.contains("已领取")) {
+                    returnParamPojo.setNotify("京东商城-京鱼: 失败, 原因: 已签过");
+                    returnParamPojo.setFail(1);
+                } else if (content.contains("不存在") || content.contains("已结束")) {
+                    returnParamPojo.setNotify("京东商城-京鱼: 失败, 原因: 活动已结束!");
+                    returnParamPojo.setFail(1);
+                } else if (jdResponsePojo.getCode() == 3) {
+                    returnParamPojo.setNotify("京东商城-京鱼: 失败, 原因: Cookie失效‼!");
+                    returnParamPojo.setFail(1);
+                } else if (jdResponsePojo.getCode() == 600) {
+                    returnParamPojo.setNotify("京东商城-京鱼: 失败, 原因: 认证失败 ");
+                    returnParamPojo.setFail(1);
+                } else {
+                    returnParamPojo.setNotify("京东商城-京鱼: 失败, 原因: 未知 !");
+                    returnParamPojo.setFail(1);
+                }
+            }
+
+        } catch (Exception e){
+            logger.info("京东商城-京鱼异常");
+            e.printStackTrace();
+            returnParamPojo.setNotify("京东商城-京鱼: 签到接口请求失败!!️");
+            returnParamPojo.setFail(1);
+        }
+        return returnParamPojo;
+    }
 
     /**
      * 京东摇一摇

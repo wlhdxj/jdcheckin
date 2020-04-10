@@ -51,6 +51,7 @@ public class StartCheckIn {
         list.add(checkIn.JDPersonalCare());//京东个人护理
 
         list.add(checkIn.JingDongPrize());//京东大奖签到
+        list.add(checkIn.JingDongFish());//京东京鱼
         list.add(checkIn.JingDongShake(new ReturnParamPojo()));//京东摇一摇
 
 
